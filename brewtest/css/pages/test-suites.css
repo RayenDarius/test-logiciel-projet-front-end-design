@@ -1,0 +1,17 @@
+/* Test suites */
+.suite-grid { gap: 20px; }
+.suite-card { padding: 22px; display: flex; flex-direction: column; gap: 16px; cursor: pointer; position: relative; overflow: hidden; }
+.suite-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--color-caramel); opacity: 0.7; }
+.suite-card:focus-visible { outline: 2px solid var(--color-caramel); outline-offset: 2px; }
+.suite-top { display: flex; align-items: flex-start; gap: 14px; }
+.suite-icon { display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: var(--caramel-soft); color: var(--accent-strong); }
+.suite-name { font-family: var(--font-display); font-weight: 400; font-size: 20px; line-height: 1.2; margin-bottom: 4px; }
+.suite-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.55; flex: 1; }
+.suite-bar .stacked-bar { height: 6px; }
+.suite-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding-top: 16px; border-top: 1px solid var(--border); }
+.suite-facts dt { font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+.suite-facts dd { margin: 0; font-size: 14px; font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.run-section { padding: 16px; border-radius: var(--radius-md); background: var(--caramel-soft); border: 1px solid var(--border); }
+.run-section h4 { margin-top: 0; }
+.config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.config-grid .k { font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }

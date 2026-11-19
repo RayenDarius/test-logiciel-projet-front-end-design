@@ -1,0 +1,4 @@
+/* Test cases */
+.detail-section .code-block { margin-top: 6px; }
+.dynamic-item .num { font-family: var(--font-mono); }
+.btn-ai { white-space: nowrap; }

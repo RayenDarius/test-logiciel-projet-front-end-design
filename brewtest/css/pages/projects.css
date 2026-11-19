@@ -1,0 +1,13 @@
+/* Projects */
+.project-card { padding: 22px; display: flex; flex-direction: column; gap: 16px; transition: border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
+.project-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.project-card.is-active { border-color: var(--color-caramel); box-shadow: 0 0 0 1px var(--color-caramel), var(--shadow-sm); }
+.project-head { display: flex; align-items: center; gap: 14px; }
+.project-glyph { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--color-roast); color: var(--color-latte); font-family: var(--font-display); font-size: 22px; flex-shrink: 0; }
+[data-theme="dark"] .project-glyph { background: var(--caramel-soft); color: var(--color-caramel); }
+.project-title { font-family: var(--font-display); font-weight: 400; font-size: 20px; line-height: 1.2; margin-bottom: 6px; }
+.project-desc { flex: 1; color: var(--text-secondary); font-size: 14px; line-height: 1.55; }
+.project-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 14px 0; border-block: 1px solid var(--border); }
+.project-stats dt { font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+.project-stats dd { margin: 0; font-size: 15px; font-weight: 600; }
+.project-actions { display: flex; align-items: center; gap: 4px; }

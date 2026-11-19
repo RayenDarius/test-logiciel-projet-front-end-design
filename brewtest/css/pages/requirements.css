@@ -1,0 +1,4 @@
+/* Requirements: most layout comes from shared table, toolbar and drawer components */
+.page .toolbar .search { flex: 1 1 260px; max-width: 360px; }
+.page .toolbar .select-sm { min-width: 150px; }
+.table .cell-sub { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 460px; }

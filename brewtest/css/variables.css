@@ -1,0 +1,116 @@
+/* ==========================================================
+   BrewTest design tokens
+   ========================================================== */
+:root {
+  /* Brand palette */
+  --color-espresso: #35251F;
+  --color-roast: #4B342A;
+  --color-mocha: #765443;
+  --color-caramel: #B98556;
+  --color-latte: #D8BFA6;
+  --color-cream: #F6F0E7;
+  --color-ivory: #FFFCF7;
+  --color-border: #E9DED1;
+  --color-muted: #9A887B;
+  --color-success: #54846B;
+  --color-error: #B85C50;
+  --color-warning: #C4934F;
+
+  /* Soft tints derived from the palette */
+  --success-soft: #E5EEE8;
+  --error-soft: #F5E5E2;
+  --warning-soft: #F7ECDA;
+  --caramel-soft: #F4E8DA;
+  --info-soft: #EBE3D9;
+
+  /* Semantic tokens (re-mapped in dark theme) */
+  --bg-app: var(--color-cream);
+  --bg-surface: var(--color-ivory);
+  --bg-subtle: #F9F4EC;
+  --bg-input: #FFFEFB;
+  --bg-hover: #F6EFE5;
+  --border: var(--color-border);
+  --border-strong: #DCCDBB;
+  --text-primary: var(--color-espresso);
+  --text-secondary: #6B574A;
+  --text-muted: var(--color-muted);
+  --text-on-dark: var(--color-ivory);
+  --accent: var(--color-caramel);
+  --accent-strong: var(--color-mocha);
+  --btn-primary-bg: var(--color-roast);
+  --btn-primary-hover: var(--color-espresso);
+  --sidebar-bg: var(--color-espresso);
+  --scrim: rgba(53, 37, 31, 0.48);
+
+  /* Typography */
+  --font-display: "DM Serif Display", "Playfair Display", Georgia, serif;
+  --font-body: "Inter", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+
+  /* Shadows (warm-tinted) */
+  --shadow-xs: 0 1px 2px rgba(53, 37, 31, 0.05);
+  --shadow-sm: 0 1px 3px rgba(53, 37, 31, 0.06), 0 1px 2px rgba(53, 37, 31, 0.04);
+  --shadow-md: 0 6px 16px -4px rgba(53, 37, 31, 0.10), 0 2px 6px rgba(53, 37, 31, 0.05);
+  --shadow-lg: 0 18px 40px -12px rgba(53, 37, 31, 0.22), 0 6px 14px rgba(53, 37, 31, 0.07);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Layout */
+  --sidebar-width: 268px;
+  --sidebar-width-collapsed: 80px;
+  --topbar-height: 68px;
+  --content-max: 1440px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-fast: 140ms;
+  --t-base: 220ms;
+  --t-slow: 360ms;
+
+  --row-pad-y: 14px;
+}
+
+[data-density="compact"] {
+  --row-pad-y: 8px;
+}
+
+/* Dark theme: "Midnight Roast". Sidebar stays espresso. */
+[data-theme="dark"] {
+  --bg-app: #1D1410;
+  --bg-surface: #281C16;
+  --bg-subtle: #2F211A;
+  --bg-input: #22170F;
+  --bg-hover: #33241C;
+  --border: #3E2E25;
+  --border-strong: #52403A;
+  --text-primary: #F4EBDF;
+  --text-secondary: #C9B6A5;
+  --text-muted: #9A887B;
+  --accent-strong: var(--color-latte);
+  --btn-primary-bg: var(--color-caramel);
+  --btn-primary-hover: #C99564;
+  --sidebar-bg: #2A1D17;
+  --scrim: rgba(10, 6, 4, 0.62);
+  --success-soft: rgba(84, 132, 107, 0.2);
+  --error-soft: rgba(184, 92, 80, 0.2);
+  --warning-soft: rgba(196, 147, 79, 0.2);
+  --caramel-soft: rgba(185, 133, 86, 0.18);
+  --info-soft: rgba(216, 191, 166, 0.14);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 6px 16px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 40px -12px rgba(0, 0, 0, 0.6);
+}

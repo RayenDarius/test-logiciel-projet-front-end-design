@@ -1,0 +1,7 @@
+/* Dashboard */
+.kpis { margin-bottom: 20px; }
+.grid-side-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); }
+.page .grid-main-side + .grid-side-main { margin-top: 20px; }
+#activity-table .table td:nth-child(2) { max-width: 240px; }
+#activity-table .table td { white-space: nowrap; }
+#activity-table .table td:nth-child(2) .cell-title { overflow: hidden; text-overflow: ellipsis; }
