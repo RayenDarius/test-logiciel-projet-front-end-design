@@ -1,0 +1,52 @@
+<header class="page-header">
+  <div>
+    <h1>System Status & Health</h1>
+    <p class="page-sub">Verifies integration across Frontend, Backend API proxy, and AI Service.</p>
+  </div>
+  <div class="page-header-actions">
+    <button type="button" class="btn btn-primary" (click)="checkHealth()" [disabled]="loading()">
+      <app-icon name="rotate-cw" />{{ loading() ? 'Checking...' : 'Recheck Status' }}
+    </button>
+  </div>
+</header>
+
+<div class="health-container">
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Backend API Endpoint (/api/health)</h2>
+        <p class="card-sub">
+          Routed via Angular CLI proxy (<code>proxy.conf.json</code>) to <code>http://localhost:8000</code>.
+        </p>
+      </div>
+      <span class="stat-icon health-icon"><app-icon name="server" /></span>
+    </div>
+
+    <div class="card-body">
+      <div class="status-indicator">
+        @if (loading()) {
+          <span class="badge badge-running">Checking backend connection...</span>
+        } @else if (healthData()?.status === 'ok') {
+          <span class="badge badge-success">Healthy (200 OK)</span>
+        } @else {
+          <span class="badge badge-warning">Backend Standby / Not started yet</span>
+        }
+      </div>
+
+      <div class="meta-box">
+        <div><strong>Status:</strong> <code>{{ healthData()?.status || 'unknown' }}</code></div>
+        <div><strong>Details:</strong> {{ healthData()?.app_env || 'Phase 3 backend scaffolding pending' }}</div>
+        <div><strong>Last probe:</strong> {{ lastChecked() || 'never' }}</div>
+      </div>
+
+      <div class="detail-section phase-info">
+        <h4>Phase Verification Info</h4>
+        <ul class="check-list rules">
+          <li><app-icon name="circle-check" size="sm" /><span><strong>Frontend:</strong> Angular standalone architecture with custom design tokens from mockup.</span></li>
+          <li><app-icon name="circle-check" size="sm" /><span><strong>Contracts:</strong> Test cases schema strictly aligned with <code>contracts/test_case.schema.json</code>.</span></li>
+          <li><app-icon name="circle-check" size="sm" /><span><strong>AUT Target:</strong> Indico CERN event management on <code>http://localhost:8080</code>.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

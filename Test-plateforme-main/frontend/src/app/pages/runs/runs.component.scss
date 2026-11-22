@@ -1,0 +1,57 @@
+// Page-specific layout; shared look comes from the global design system.
+.run-selector {
+  min-width: 190px;
+  font-weight: 550;
+}
+
+.run-banner {
+  padding: 16px 18px;
+  margin-bottom: 24px;
+  border-color: var(--color-caramel);
+}
+
+.run-banner-head {
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.run-headline {
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .page-sub {
+    margin-top: 6px;
+    max-width: none;
+  }
+}
+
+.suites-table {
+  .col-suite { width: 25%; }
+  .col-bar { width: 50%; }
+  .col-result { width: 25%; }
+}
+
+.anomalies-table {
+  .col-id { width: 96px; }
+  .col-suite-name { width: 160px; }
+  .col-badge { width: 150px; }
+}
+
+@media (max-width: 768px) {
+  .run-selector {
+    flex: 1 1 100%;
+  }
+
+  .run-headline h2 {
+    font-size: 26px;
+  }
+
+  .suites-table .table,
+  .anomalies-table .table {
+    min-width: 560px;
+  }
+}

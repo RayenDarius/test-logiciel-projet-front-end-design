@@ -1,0 +1,248 @@
+<header class="page-header">
+  <div>
+    <h1>Test cases</h1>
+    <p class="page-sub">
+      {{ totalCases }} generated from {{ totalStories }} user stories. {{ reviewedCount }} reviewed so far.
+    </p>
+  </div>
+  <div class="page-header-actions">
+    <button type="button" class="btn btn-primary" (click)="openGenerateDialog()">
+      <app-icon name="sparkles" />Generate cases
+    </button>
+  </div>
+</header>
+
+<!-- Main Split View -->
+<div class="content-grid">
+  <!-- Left Master List: toolbar (search + filters) and table -->
+  <section class="card list-card" aria-label="Test cases">
+    <div class="toolbar" role="search">
+      <div class="search">
+        <app-icon name="search" />
+        <input
+          class="input"
+          aria-label="Search test cases"
+          placeholder="Search by title, ID, or technique"
+          [(ngModel)]="searchQuery"
+        />
+      </div>
+
+      <!-- Filter Dropdown -->
+      <div class="dropdown">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          aria-haspopup="true"
+          [attr.aria-expanded]="showFilterMenu()"
+          (click)="toggleFilterMenu()"
+        >
+          <app-icon name="filter" />Filter<app-icon name="chevron-down" size="sm" />
+        </button>
+
+        @if (showFilterMenu()) {
+          <div class="menu left filter-menu">
+            <div class="menu-label">Status</div>
+            <button type="button" class="menu-item" [class.is-selected]="filterStatus === null" (click)="setStatusFilter(null)">All statuses</button>
+            <button type="button" class="menu-item" [class.is-selected]="filterStatus === 'needs_review'" (click)="setStatusFilter('needs_review')">Needs review</button>
+            <button type="button" class="menu-item" [class.is-selected]="filterStatus === 'approved'" (click)="setStatusFilter('approved')">Approved</button>
+            <button type="button" class="menu-item" [class.is-selected]="filterStatus === 'edited'" (click)="setStatusFilter('edited')">Edited</button>
+            <button type="button" class="menu-item" [class.is-selected]="filterStatus === 'rejected'" (click)="setStatusFilter('rejected')">Rejected</button>
+
+            <div class="menu-sep"></div>
+
+            <div class="menu-label">User Story</div>
+            <button type="button" class="menu-item" [class.is-selected]="filterStory === null" (click)="setStoryFilter(null)">All stories</button>
+            @for (s of availableStories(); track s.id) {
+              <button type="button" class="menu-item" [class.is-selected]="filterStory === s.id" (click)="setStoryFilter(s.id)">
+                {{ s.id }}: {{ s.title }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      @if (filterStatus) {
+        <button type="button" class="badge badge-info chip" (click)="clearStatus()" [attr.aria-label]="'Remove status filter ' + statusLabel()">
+          {{ statusLabel() }} <app-icon name="x" size="sm" />
+        </button>
+      }
+      @if (filterStory) {
+        <button type="button" class="badge badge-info chip" (click)="clearStory()" [attr.aria-label]="'Remove story filter ' + storyLabel()">
+          {{ storyLabel() }} <app-icon name="x" size="sm" />
+        </button>
+      }
+
+      @if (searchQuery || filterStatus || filterStory) {
+        <button type="button" class="btn btn-ghost btn-sm" (click)="resetAllFilters()">Reset</button>
+      }
+    </div>
+
+    @if (cases.length > 0) {
+      <div class="table-wrap">
+        <table class="table" aria-label="Test cases list">
+          <thead>
+            <tr>
+              <th class="col-id">ID</th>
+              <th>Case</th>
+              <th class="col-status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tc of cases; track tc.id) {
+              <tr
+                class="is-clickable"
+                [class.is-selected]="tc.id === selectedCaseId"
+                (click)="select(tc.id)"
+              >
+                <td><span class="id-chip">{{ tc.id }}</span></td>
+                <td>
+                  <div class="cell-title">{{ tc.title }}</div>
+                  <div class="cell-sub">
+                    {{ tc.type === 'positive' ? 'Positive' : 'Negative' }}
+                  </div>
+                </td>
+                <td>
+                  @if (tc.status === 'approved') {
+                    <span class="badge badge-success">Approved</span>
+                  } @else if (tc.status === 'needs_review') {
+                    <span class="badge badge-warning">Needs review</span>
+                  } @else if (tc.status === 'edited') {
+                    <span class="badge badge-info">Edited</span>
+                  } @else if (tc.status === 'rejected') {
+                    <span class="badge badge-error">Rejected</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="table-foot" role="status">
+        Showing {{ cases.length }} of {{ totalCases }} test case{{ totalCases === 1 ? '' : 's' }}
+      </div>
+    } @else {
+      <div class="empty">
+        <div class="empty-art"><app-icon name="search" size="lg" /></div>
+        <h3>No matching test cases</h3>
+        <p>Try clearing your search query or status/story filters.</p>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="resetAllFilters()">Reset filters</button>
+      </div>
+    }
+  </section>
+
+  <!-- Right Detail Card -->
+  @if (selectedCase; as tc) {
+    <section class="card detail-card" [attr.aria-label]="'Case ' + tc.id">
+      @if (!isEditing()) {
+        <div class="row row-wrap detail-meta">
+          <span class="id-chip">{{ tc.id }}</span>
+          <span class="tag">{{ tc.type === 'positive' ? 'Positive' : 'Negative' }}</span>
+          <span class="tag">{{ tc.design_technique }}</span>
+        </div>
+
+        <h2>{{ tc.title }}</h2>
+        <p class="detail-lede">
+          Covers criterion of
+          <a href="javascript:void(0)" class="detail-link">
+            {{ tc.user_story }}{{ tc.user_story_title ? ', ' + tc.user_story_title : '' }}
+          </a>
+        </p>
+
+        <div class="detail-section">
+          <h4>Objective</h4>
+          <p>{{ tc.objective }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Preconditions</h4>
+          <p>{{ tc.preconditions.join('. ') || 'None specified' }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Steps</h4>
+          <ol class="step-list">
+            @for (step of tc.steps; track step.order) {
+              <li>{{ step.action }}</li>
+            }
+          </ol>
+        </div>
+
+        <div class="detail-section">
+          <h4>Expected result</h4>
+          <p>{{ tc.expected_result }}</p>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="btn btn-danger-soft" (click)="reject()"><app-icon name="ban" />Reject</button>
+          <button type="button" class="btn btn-secondary" (click)="startEdit()"><app-icon name="pencil" />Edit</button>
+          <span class="shortcut-hint">
+            <kbd class="kbd">A</kbd> approves · <kbd class="kbd">R</kbd> rejects · <kbd class="kbd">J</kbd> and <kbd class="kbd">K</kbd> move
+          </span>
+          <button type="button" class="btn btn-primary" (click)="approve()"><app-icon name="check" />Approve case</button>
+        </div>
+      } @else {
+        <!-- Inline Editor Form -->
+        <h2>Edit {{ tc.id }}</h2>
+        <div class="edit-form">
+          <label class="field">
+            <span class="label">Title</span>
+            <input class="input" [(ngModel)]="editModel.title" />
+          </label>
+
+          <label class="field">
+            <span class="label">Objective</span>
+            <textarea class="textarea" rows="2" [(ngModel)]="editModel.objective"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="label">Preconditions (one per line)</span>
+            <textarea class="textarea" rows="2" [(ngModel)]="editModel.preconditions"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="label">Expected Result</span>
+            <textarea class="textarea" rows="2" [(ngModel)]="editModel.expected_result"></textarea>
+          </label>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <div class="grow"></div>
+          <button type="button" class="btn btn-primary" (click)="saveEdit()"><app-icon name="check" />Save Changes</button>
+        </div>
+      }
+    </section>
+  }
+</div>
+
+<!-- Generate Cases Modal Dialog -->
+@if (showGenerateDialog()) {
+  <div class="overlay" (click)="closeGenerateDialog()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="generate-title" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 id="generate-title">Generate Test Cases</h2>
+        <p>Select a user story to synthesize ISTQB black-box test cases:</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="dialog-story-list">
+          @for (s of availableStories(); track s.id) {
+            <div class="linked-item">
+              <div>
+                <div class="cell-title">{{ s.id }}: {{ s.title }}</div>
+                <div class="text-muted text-sm">{{ s.testCaseCount }} existing cases</div>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="generateForStory(s.id)">
+                <app-icon name="sparkles" />Generate
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeGenerateDialog()">Close</button>
+      </div>
+    </div>
+  </div>
+}

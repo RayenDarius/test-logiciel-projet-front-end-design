@@ -1,0 +1,5 @@
+// Sidebar styles live in the global design system (src/styles/_shell.scss) so the
+// off-canvas state set on .app by AppComponent can drive them.
+:host {
+  display: contents;
+}

@@ -1,0 +1,154 @@
+<header class="page-header">
+  <div>
+    <h1>Requirements</h1>
+    <p class="page-sub">
+      {{ stories.length }} user stories. {{ selectedStory.id }} has {{ selectedStory.acceptanceCriteria.length }} criteria and {{ selectedStory.testCaseCount }} test case{{ selectedStory.testCaseCount === 1 ? '' : 's' }}{{ selectedStory.testCaseCount === 0 ? ' yet' : '' }}.
+    </p>
+  </div>
+  <div class="page-header-actions">
+    @if (notificationMessage()) {
+      <span class="badge badge-success">{{ notificationMessage() }}</span>
+    }
+    <span class="text-muted text-sm" role="status">Saved {{ lastSaved }}</span>
+  </div>
+</header>
+
+<div class="req-grid">
+  <!-- Column 1: Stories List -->
+  <section class="card list-card">
+    <div class="table-wrap">
+      <table class="table" aria-label="User stories">
+        <tbody>
+          @for (story of stories; track story.id) {
+            <tr
+              class="is-clickable"
+              [class.is-selected]="story.id === selectedStoryId"
+              (click)="select(story.id)"
+            >
+              <td class="col-id"><span class="id-chip">{{ story.id }}</span></td>
+              <td>
+                <div class="cell-title">{{ story.title }}</div>
+                <div class="cell-sub">
+                  {{ story.isGenerated ? story.testCaseCount + ' cases' : 'Not generated' }}
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Column 2: Story Detail Card -->
+  @if (selectedStory; as story) {
+    <section class="card detail-card">
+      @if (!isEditingStory()) {
+        <h2>{{ story.title }}</h2>
+
+        <div class="detail-section first">
+          <h4>User story</h4>
+          <p class="detail-quote">{{ story.storyText }}</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="section-head">
+            <h4>Acceptance criteria ({{ story.acceptanceCriteria.length }})</h4>
+            <button type="button" class="link-btn" (click)="startAddCriterion()"><app-icon name="plus" size="sm" />Add criterion</button>
+          </div>
+
+          <ol class="step-list">
+            @for (ac of story.acceptanceCriteria; track $index) {
+              <li class="ac-item">
+                <span class="ac-text">{{ ac }}</span>
+                <button type="button" class="icon-btn sm danger" (click)="removeCriterion($index)" title="Remove criterion" aria-label="Remove criterion">
+                  <app-icon name="x" size="sm" />
+                </button>
+              </li>
+            }
+          </ol>
+
+          <!-- Inline add criterion input -->
+          @if (isAddingCriterion()) {
+            <div class="add-criterion-box">
+              <input
+                class="input"
+                placeholder="e.g. Validation error displays if input exceeds 300 characters"
+                [ngModel]="newCriterionText()"
+                (ngModelChange)="newCriterionText.set($event)"
+                (keydown.enter)="confirmAddCriterion()"
+              />
+              <div class="row add-criterion-actions">
+                <button type="button" class="btn btn-primary btn-sm" (click)="confirmAddCriterion()">Add</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="cancelAddCriterion()">Cancel</button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="detail-section">
+          <h4>Business rules</h4>
+          <ul class="check-list rules">
+            @for (br of story.businessRules; track br) {
+              <li><app-icon name="circle-check" size="sm" />{{ br }}</li>
+            }
+          </ul>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="btn btn-secondary" (click)="startAddCriterion()"><app-icon name="plus" />Add criterion</button>
+          <button type="button" class="btn btn-secondary" (click)="startEditStory()"><app-icon name="pencil" />Edit story</button>
+        </div>
+      } @else {
+        <!-- Edit Story Form -->
+        <h2>Edit {{ story.id }}</h2>
+        <div class="edit-form">
+          <label class="field">
+            <span class="label">Story Title</span>
+            <input class="input" [(ngModel)]="editModel.title" />
+          </label>
+
+          <label class="field">
+            <span class="label">User Story Text</span>
+            <textarea class="textarea" rows="3" [(ngModel)]="editModel.storyText"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="label">Business Rules (one per line)</span>
+            <textarea class="textarea" rows="3" [(ngModel)]="editModel.businessRulesText"></textarea>
+          </label>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancelStoryEdit()">Cancel</button>
+          <div class="grow"></div>
+          <button type="button" class="btn btn-primary" (click)="saveStoryEdit()"><app-icon name="check" />Save Story</button>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Column 3: Design Techniques selection -->
+  <aside class="card technique-panel">
+    <div>
+      <h2 class="card-title">Design techniques</h2>
+      <p class="card-sub">Each case names the technique that produced it.</p>
+    </div>
+
+    <div class="technique-list">
+      @for (tech of techniques; track tech.id) {
+        <label class="check">
+          <input
+            type="checkbox"
+            [checked]="tech.enabled"
+            (change)="toggleTechnique(tech.id)"
+          />
+          {{ tech.label }}
+        </label>
+      }
+    </div>
+
+    <button type="button" class="btn btn-primary btn-block" (click)="onGenerate()">
+      <app-icon name="sparkles" />Generate cases for {{ selectedStoryId }}
+    </button>
+  </aside>
+</div>

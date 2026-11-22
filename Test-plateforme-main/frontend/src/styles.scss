@@ -1,0 +1,6 @@
+/* Testgen global stylesheet.
+   Visual identity transferred from Brewtest: tokens → base → shell → components. */
+@use 'styles/tokens';
+@use 'styles/base';
+@use 'styles/shell';
+@use 'styles/components';

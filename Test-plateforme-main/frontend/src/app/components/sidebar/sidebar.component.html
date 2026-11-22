@@ -1,0 +1,54 @@
+<nav class="sidebar" aria-label="Main">
+  <div class="sidebar-brand">
+    <a routerLink="/test-cases" class="brand-link" aria-label="Testgen home">
+      <span class="brand-mark"><app-icon name="coffee" size="lg" /></span>
+      <span class="brand-name">Test<span>gen</span></span>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label" id="nav-workspace">Workspace</div>
+      <div role="group" aria-labelledby="nav-workspace">
+        @for (item of navItems(); track item.route) {
+          <a
+            class="nav-item"
+            [routerLink]="item.route"
+            routerLinkActive="is-active"
+            [attr.aria-current]="rla.isActive ? 'page' : null"
+            #rla="routerLinkActive"
+          >
+            @switch (item.route) {
+              @case ('/requirements') { <app-icon name="clipboard-list" /> }
+              @case ('/test-cases') { <app-icon name="flask-conical" /> }
+              @case ('/runs') { <app-icon name="play" /> }
+              @case ('/reports') { <app-icon name="chart-column" /> }
+            }
+            <span class="label">{{ item.label }}</span>
+            <i class="nav-count">{{ item.count }}</i>
+          </a>
+        }
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label" id="nav-management">Management</div>
+      <div role="group" aria-labelledby="nav-management">
+        <a class="nav-item" routerLink="/knowledge-base" routerLinkActive="is-active">
+          <app-icon name="book-open" />
+          <span class="label">Knowledge base</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label" id="nav-preferences">Preferences</div>
+      <div role="group" aria-labelledby="nav-preferences">
+        <a class="nav-item" routerLink="/health" routerLinkActive="is-active">
+          <app-icon name="settings" />
+          <span class="label">Settings & Health</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

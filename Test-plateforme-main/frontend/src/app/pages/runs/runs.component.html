@@ -1,0 +1,150 @@
+<header class="page-header">
+  <div>
+    <h1>Run {{ run.runId }}</h1>
+    <p class="page-sub">{{ run.timestamp }}</p>
+  </div>
+
+  <div class="page-header-actions">
+    <select
+      class="select select-sm run-selector"
+      aria-label="Select run"
+      [ngModel]="run.runId"
+      (ngModelChange)="onSelectRun($event)"
+    >
+      @for (r of allRuns; track r.runId) {
+        <option [value]="r.runId">
+          Run {{ r.runId }} ({{ r.passedTests }}/{{ r.totalTests }} passed)
+        </option>
+      }
+    </select>
+    <button type="button" class="btn btn-secondary" (click)="runAgain()" [disabled]="isExecuting">
+      <app-icon name="rotate-cw" />{{ isExecuting ? 'Running...' : 'Run again' }}
+    </button>
+    <button type="button" class="btn btn-primary" (click)="exportReport()">
+      <app-icon name="download" />Export report
+    </button>
+  </div>
+</header>
+
+<!-- Live Execution Progress Bar Banner -->
+@if (isExecuting) {
+  <div class="card run-banner">
+    <div class="row run-banner-head">
+      <span class="badge badge-running">Executing Automation Suites</span>
+      <span class="text-sm">{{ executionMessage }}</span>
+    </div>
+    <div class="progress thin is-indeterminate"><span></span></div>
+  </div>
+}
+
+<div class="run-headline">
+  <h2>{{ run.passedTests }} of {{ run.totalTests }} tests passed</h2>
+  <p class="page-sub">
+    {{ run.failedTests }} failed and {{ run.skippedTests }} were skipped. {{ anomalySummaryText() }}
+  </p>
+</div>
+
+<section class="grid grid-3" aria-label="Run totals">
+  <div class="card stat-card tone-success">
+    <div class="stat-top">
+      <span class="stat-label">Passed</span>
+      <span class="stat-icon"><app-icon name="circle-check" /></span>
+    </div>
+    <div class="stat-value">{{ run.passedTests }}</div>
+    <div class="stat-foot">of {{ run.totalTests }} tests</div>
+  </div>
+
+  <div class="card stat-card tone-error">
+    <div class="stat-top">
+      <span class="stat-label">Failed</span>
+      <span class="stat-icon"><app-icon name="circle-x" /></span>
+    </div>
+    <div class="stat-value">{{ run.failedTests }}</div>
+    <div class="stat-foot">of {{ run.totalTests }} tests</div>
+  </div>
+
+  <div class="card stat-card tone-warning">
+    <div class="stat-top">
+      <span class="stat-label">Skipped</span>
+      <span class="stat-icon"><app-icon name="ban" /></span>
+    </div>
+    <div class="stat-value">{{ run.skippedTests }}</div>
+    <div class="stat-foot">of {{ run.totalTests }} tests</div>
+  </div>
+</section>
+
+<!-- Suites Progress Table -->
+<section class="card mt-6">
+  <div class="card-header">
+    <h2 class="card-title">Suites</h2>
+  </div>
+  <div class="table-wrap suites-table">
+    <table class="table" aria-label="Suites results">
+      <thead>
+        <tr>
+          <th class="col-suite">Suite</th>
+          <th class="col-bar">Passed</th>
+          <th class="col-result">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (suite of run.suites; track suite.name) {
+          <tr>
+            <td class="cell-title">{{ suite.name }}</td>
+            <td>
+              <div class="progress is-split">
+                <span [style.width.%]="suite.percentage"></span>
+              </div>
+            </td>
+            <td>
+              {{ suite.passed }} of {{ suite.total }}
+              <span class="text-muted text-sm">({{ suite.percentage }}%)</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card mt-6">
+  <div class="card-header">
+    <h2 class="card-title">Needs attention ({{ run.anomalies.length }})</h2>
+  </div>
+
+  <!-- Anomalies Table -->
+  @if (run.anomalies.length > 0) {
+    <div class="table-wrap anomalies-table">
+      <table class="table" aria-label="Test anomalies">
+        <tbody>
+          @for (anomaly of run.anomalies; track anomaly.testId) {
+            <tr>
+              <td class="col-id"><span class="id-chip">{{ anomaly.testId }}</span></td>
+              <td>
+                <div class="cell-title">{{ anomaly.testTitle }}</div>
+                <div class="cell-sub">
+                  {{ anomaly.description }}
+                </div>
+              </td>
+              <td class="col-suite-name">{{ anomaly.suite }}</td>
+              <td class="col-badge">
+                <span
+                  class="badge"
+                  [class.badge-error]="anomaly.badgeType === 'bad'"
+                  [class.badge-warning]="anomaly.badgeType === 'wn'"
+                >
+                  {{ anomaly.badgeText }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty">
+      <div class="empty-art is-success"><app-icon name="circle-check" size="lg" /></div>
+      <p>No failures or anomalies detected in this run!</p>
+    </div>
+  }
+</section>

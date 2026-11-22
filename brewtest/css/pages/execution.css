@@ -1,8 +1,0 @@
-/* Test execution */
-.exec-grid { grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.6fr); align-items: start; }
-.live-idle { min-height: 280px; display: grid; place-items: center; }
-.final-banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-subtle); }
-.final-banner.is-pass { background: var(--success-soft); border-color: color-mix(in srgb, var(--color-success) 35%, transparent); }
-.final-banner.is-fail { background: var(--error-soft); border-color: color-mix(in srgb, var(--color-error) 35%, transparent); }
-.result-table { max-height: 360px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
-.run-panel.is-running { border-color: var(--color-caramel); }
